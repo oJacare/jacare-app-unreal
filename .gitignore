@@ -1,0 +1,39 @@
+# Ignorar pastas de compilação do Plugin
+Binaries/
+Intermediate/
+
+# Ignorar pastas de Cache e Configurações Locais
+Saved/
+DerivedDataCache/
+
+# Arquivos de IDE (Visual Studio / Rider / VS Code)
+.vs/
+.vscode/
+.idea/
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+*.xcworkspace
+
+# Binários e Temporários de compilação
+*.slo
+*.lo
+*.o
+*.obj
+*.pdb
+*.gch
+*.pch
+*.so
+*.dylib
+*.dll
+*.lai
+*.la
+*.a
+*.lib
+
+# Arquivos de Sistema Operacional
+.DS_Store
+Thumbs.db
