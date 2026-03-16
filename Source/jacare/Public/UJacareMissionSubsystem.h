@@ -9,8 +9,7 @@
 #include "UJacareMissionSubsystem.generated.h"
 
 /**
- * Configurações do Jacare expostas no Project Settings.
- * Acesse em: Project Settings → Plugins → Jacare
+ * Jacare plugin settings exposed in Project Settings → Plugins → Jacare.
  */
 UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "Jacare"))
 class JACARE_API UJacareSettings : public UDeveloperSettings
@@ -18,12 +17,10 @@ class JACARE_API UJacareSettings : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
-	/** URL base do Jacare Maestro (backend NestJS) */
-	UPROPERTY(Config, EditAnywhere, Category = "Backend")
+	UPROPERTY(Config, EditAnywhere, Category = "Backend", meta = (Tooltip = "Base URL of the Jacare NestJS backend. No trailing slash."))
 	FString BackendUrl = TEXT("http://localhost:3000");
 
-	/** API Key gerada no painel web (POST /api-keys). Formato: jcr_live_<hex> */
-	UPROPERTY(Config, EditAnywhere, Category = "Backend")
+	UPROPERTY(Config, EditAnywhere, Category = "Backend", meta = (Tooltip = "M2M API key from the Jacare web editor. Keep this secret — do not commit to source control."))
 	FString EngineApiKey;
 };
 
@@ -32,11 +29,11 @@ struct FJacareTargetActor
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	FString class_path;
 
-	UPROPERTY()
-	FVector spawn_location;
+	UPROPERTY(BlueprintReadOnly)
+	FVector spawn_location = FVector::ZeroVector;
 };
 
 USTRUCT(BlueprintType)
@@ -44,10 +41,10 @@ struct FJacareMissionData
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	FString mission_id;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	FJacareTargetActor target_actor;
 };
 
@@ -58,8 +55,15 @@ class JACARE_API UJacareMissionSubsystem : public UGameInstanceSubsystem
 
 public:
 
-	UFUNCTION(BlueprintCallable, category = "Jacare")
-	void LoadAndSpawnMission();
+	/**
+	 * Fetches the active version of the given mission from the Jacare backend
+	 * and spawns the described actor in the world. The operation is fully async
+	 * and does not block the Game Thread.
+	 *
+	 * @param MissionId  The mission ID as configured in the Jacare web editor.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Jacare")
+	void LoadAndSpawnMission(const FString& MissionId);
 
 private:
 	void OnHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
