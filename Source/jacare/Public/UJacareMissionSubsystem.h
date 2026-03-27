@@ -18,7 +18,7 @@ class JACARE_API UJacareSettings : public UDeveloperSettings
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "Backend", meta = (Tooltip = "Base URL of the Jacare NestJS backend. No trailing slash."))
-	FString BackendUrl = TEXT("http://localhost:3000");
+	FString BackendUrl = TEXT("http://localhost:3001");
 
 	UPROPERTY(Config, EditAnywhere, Category = "Backend", meta = (Tooltip = "M2M API key from the Jacare web editor. Keep this secret — do not commit to source control."))
 	FString EngineApiKey;
