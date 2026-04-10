@@ -46,6 +46,7 @@ void UJacareMissionSubsystem::OnHttpResponse(FHttpRequestPtr Request, FHttpRespo
 	if (!bSuccess || !Response.IsValid())
 	{
 		UE_LOG(LogJacare, Error, TEXT("HTTP request failed — could not reach backend."));
+		OnMissionFailed.Broadcast(TEXT(""), TEXT("HTTP request failed")); 
 		return;
 	}
 
@@ -53,6 +54,7 @@ void UJacareMissionSubsystem::OnHttpResponse(FHttpRequestPtr Request, FHttpRespo
 	if (StatusCode != 200)
 	{
 		UE_LOG(LogJacare, Error, TEXT("Backend returned HTTP %d. Body: %s"), StatusCode, *Response->GetContentAsString());
+		OnMissionFailed.Broadcast(TEXT(""), FString::Printf(TEXT("HTTP %d"), StatusCode));
 		return;
 	}
 
@@ -62,6 +64,7 @@ void UJacareMissionSubsystem::OnHttpResponse(FHttpRequestPtr Request, FHttpRespo
 	if (!bParsed)
 	{
 		UE_LOG(LogJacare, Error, TEXT("Failed to parse mission JSON. Raw response: %s"), *Response->GetContentAsString());
+		OnMissionFailed.Broadcast(TEXT(""), TEXT("Failed to parse mission JSON"));
 		return;
 	}
 
@@ -113,9 +116,11 @@ void UJacareMissionSubsystem::OnTargetLoaded(FJacareMissionData MissionData)
 	if (SpawnedActor)
 	{
 		UE_LOG(LogJacare, Log, TEXT("Actor '%s' spawned for mission '%s'."), *LoadedClass->GetName(), *MissionData.MissionId);
+		OnMissionSpawned.Broadcast(MissionData.MissionId, SpawnedActor);
 	}
 	else
 	{
-		UE_LOG(LogJacare, Warning, TEXT("SpawnActor returned null for class '%s'. Check collision or spawn rules."), *LoadedClass->GetName());
+		UE_LOG(LogJacare, Warning, TEXT("SpawnActor returned null for mission '%s'."), *MissionData.MissionId);
+		OnMissionFailed.Broadcast(MissionData.MissionId, TEXT("SpawnActor returned null"));
 	}
 }

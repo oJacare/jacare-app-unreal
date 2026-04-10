@@ -48,12 +48,28 @@ struct FJacareMissionData
 	FJacareTargetActor TargetActor;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(
+	FOnMissionSpawned,
+	const FString&, MissionId,
+	AActor*, SpawnedActor);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(
+	FOnMissionFailed,
+	const FString&, MissionId,
+	const FString&, ErrorMessage);
+
 UCLASS()
 class JACARE_API UJacareMissionSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(BlueprintAssignable, Category = "Jacare|Events")
+	FOnMissionSpawned OnMissionSpawned;
+
+	UPROPERTY(BlueprintAssignable, Category = "Jacare|Events")
+	FOnMissionFailed OnMissionFailed;
 
 	/**
 	 * Fetches the active version of the given mission from the Jacare backend
