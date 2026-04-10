@@ -1,4 +1,4 @@
-// Copyright 2026, Lisboon. All Rights Reserved.
+// Copyright 2026, oJacare. All Rights Reserved.
 
 #pragma once
 
@@ -8,9 +8,6 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "UJacareMissionSubsystem.generated.h"
 
-/**
- * Jacare plugin settings exposed in Project Settings → Plugins → Jacare.
- */
 UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "Jacare"))
 class JACARE_API UJacareSettings : public UDeveloperSettings
 {

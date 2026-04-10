@@ -1,4 +1,4 @@
-// Copyright 2026, Lisboon. All Rights Reserved.
+// Copyright 2026, oJacare. All Rights Reserved.
 
 #include "UJacareMissionSubsystem.h"
 #include "jacare.h"
