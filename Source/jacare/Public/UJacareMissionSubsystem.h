@@ -30,10 +30,10 @@ struct FJacareTargetActor
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly)
-	FString class_path;
+	FString ClassPath;
 
 	UPROPERTY(BlueprintReadOnly)
-	FVector spawn_location = FVector::ZeroVector;
+	FVector SpawnLocation = FVector::ZeroVector;
 };
 
 USTRUCT(BlueprintType)
@@ -42,10 +42,10 @@ struct FJacareMissionData
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly)
-	FString mission_id;
+	FString MissionId;
 
 	UPROPERTY(BlueprintReadOnly)
-	FJacareTargetActor target_actor;
+	FJacareTargetActor TargetActor;
 };
 
 UCLASS()

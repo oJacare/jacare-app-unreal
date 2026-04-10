@@ -65,9 +65,9 @@ void UJacareMissionSubsystem::OnHttpResponse(FHttpRequestPtr Request, FHttpRespo
 		return;
 	}
 
-	UE_LOG(LogJacare, Log, TEXT("Mission '%s' received. Async-loading actor class: %s"), *MissionData.mission_id, *MissionData.target_actor.class_path);
+	UE_LOG(LogJacare, Log, TEXT("Mission '%s' received. Async-loading actor class: %s"), *MissionData.MissionId, *MissionData.TargetActor.ClassPath);
 
-	const FSoftClassPath SoftPath(MissionData.target_actor.class_path);
+	const FSoftClassPath SoftPath(MissionData.TargetActor.ClassPath);
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		SoftPath,
 		FStreamableDelegate::CreateUObject(this, &UJacareMissionSubsystem::OnTargetLoaded, MissionData)
@@ -95,24 +95,24 @@ void UJacareMissionSubsystem::OnTargetLoaded(FJacareMissionData MissionData)
 		return;
 	}
 
-	const TSoftClassPtr<AActor> SoftClass(MissionData.target_actor.class_path);
+	const TSoftClassPtr<AActor> SoftClass(MissionData.TargetActor.ClassPath);
 	UClass* LoadedClass = SoftClass.Get();
 	if (!LoadedClass)
 	{
-		UE_LOG(LogJacare, Error, TEXT("OnTargetLoaded: Failed to resolve class '%s'. Check that the path is correct and the asset is cooked."), *MissionData.target_actor.class_path);
+		UE_LOG(LogJacare, Error, TEXT("OnTargetLoaded: Failed to resolve class '%s'. Check that the path is correct and the asset is cooked."), *MissionData.TargetActor.ClassPath);
 		return;
 	}
 
 	if (!LoadedClass->IsChildOf(AActor::StaticClass()))
 	{
-		UE_LOG(LogJacare, Error, TEXT("OnTargetLoaded: Class '%s' is not an AActor subclass. Spawn aborted."), *MissionData.target_actor.class_path);
+		UE_LOG(LogJacare, Error, TEXT("OnTargetLoaded: Class '%s' is not an AActor subclass. Spawn aborted."), *MissionData.TargetActor.ClassPath);
 		return;
 	}
 
-	AActor* SpawnedActor = World->SpawnActor<AActor>(LoadedClass, MissionData.target_actor.spawn_location, FRotator::ZeroRotator);
+	AActor* SpawnedActor = World->SpawnActor<AActor>(LoadedClass, MissionData.TargetActor.SpawnLocation, FRotator::ZeroRotator);
 	if (SpawnedActor)
 	{
-		UE_LOG(LogJacare, Log, TEXT("Actor '%s' spawned for mission '%s'."), *LoadedClass->GetName(), *MissionData.mission_id);
+		UE_LOG(LogJacare, Log, TEXT("Actor '%s' spawned for mission '%s'."), *LoadedClass->GetName(), *MissionData.MissionId);
 	}
 	else
 	{
